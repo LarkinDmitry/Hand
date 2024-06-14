@@ -1,0 +1,1 @@
+public enum HandPart { Palm, Thumb, Index, Middle, Ring, Pinkie, }
