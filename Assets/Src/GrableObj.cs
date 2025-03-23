@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
 public class GrableObj : MonoBehaviour
 {
     [SerializeField] private HandPart[] toGrabHandParts;
-    [SerializeField] private Button resetButton;
-
     private Transform defaultParent;
     private List<Gripper> grippers = new();
     private Rigidbody rb;
@@ -26,7 +23,7 @@ public class GrableObj : MonoBehaviour
         startPosition = transform.position;
         startRotation = transform.rotation;
 
-        resetButton?.onClick.AddListener(GoToStartPosition);
+        UIEvents.OnPressReset += GoToStartPosition;
     }
 
     public void AddGripper(Gripper gripper)
@@ -70,8 +67,11 @@ public class GrableObj : MonoBehaviour
 
     private void Grab(Hand hand)
     {
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        if (!rb.isKinematic)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
         rb.isKinematic = true;
 
         gripHand = hand;
@@ -92,7 +92,7 @@ public class GrableObj : MonoBehaviour
 
     private void GoToStartPosition()
     {
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         transform.position = startPosition;
         transform.rotation = startRotation;

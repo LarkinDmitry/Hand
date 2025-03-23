@@ -15,8 +15,6 @@ public class RealisticGrabHand : MonoBehaviour
     [SerializeField] private Gripper palmGrabZonePrefab;
     [Space]
     [SerializeField] private float threshold;
-    [Space]
-    [SerializeField] private Toggle filtration;
 
     private Hand hand;
 
@@ -53,7 +51,7 @@ public class RealisticGrabHand : MonoBehaviour
 
     private void UpdateBonePosition(HandPart handPart, HandBones view, HandBones original)
     {
-        if (hand.GripParts != null && hand.GripParts.Contains(handPart) && filtration.isOn)
+        if (hand.GripParts != null && hand.GripParts.Contains(handPart) && UIEvents.FiltrationState)
         {
             Vector3 viewPosition = view.GetGroupByPart(handPart)[0].position - view.palm.position;
             Vector3 originalPosition = original.GetGroupByPart(handPart)[0].position - original.palm.position;
