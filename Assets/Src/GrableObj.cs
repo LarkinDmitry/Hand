@@ -7,13 +7,14 @@ using UnityEngine;
 public class GrableObj : MonoBehaviour
 {
     [SerializeField] private HandPart[] toGrabHandParts;
+
     private Transform defaultParent;
     private List<Gripper> grippers = new();
     private Rigidbody rb;
-    private Hand gripHand;
 
     private Vector3 startPosition;
     private Quaternion startRotation;
+    public Hand GripHand { get; private set; }
 
     private void Awake()
     {
@@ -36,6 +37,19 @@ public class GrableObj : MonoBehaviour
     {
         grippers.Remove(gripper);
         CheckStatus();
+    }
+
+    public bool IsGrippedAt(Hand hand)
+    {
+        foreach (var gripper in grippers)
+        {
+            if(gripper.Hand == hand)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void CheckStatus()
@@ -67,26 +81,25 @@ public class GrableObj : MonoBehaviour
 
     private void Grab(Hand hand)
     {
-        if (!rb.isKinematic)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-        rb.isKinematic = true;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.useGravity = false;
 
-        gripHand = hand;
-        gripHand.GripParts = toGrabHandParts;
+        GripHand = hand;
+        GripHand.AddGrableObj(this);
+        GripHand.GripParts = toGrabHandParts;
         transform.parent = hand.Root;
     }
 
     private void Release()
     {
-        rb.isKinematic = false;
+        rb.useGravity = true;
         transform.parent = defaultParent;
 
-        if (gripHand != null)
+        if (GripHand != null)
         {
-            gripHand.GripParts = null;
+            GripHand.RemoveGrableObj(this);
+            GripHand.GripParts = null;
         }
     }
 

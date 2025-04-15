@@ -1,9 +1,10 @@
+using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RealisticGrabHand : MonoBehaviour
 {
+    [SerializeField] private BodySide side;
     [SerializeField] private HandBones wristOriginal;
     [SerializeField] private SkinnedMeshRenderer handOriginal;
     [Space]
@@ -18,6 +19,8 @@ public class RealisticGrabHand : MonoBehaviour
 
     private Hand hand;
 
+    public event Action<bool> OnSwitchGrabState;
+
     private void Awake()
     {
         Gripper palm = Instantiate(palmGrabZonePrefab, wristView.palm.transform);
@@ -27,7 +30,8 @@ public class RealisticGrabHand : MonoBehaviour
         Gripper ring = Instantiate(fingerGrabZonePrefab, wristView.ringTip.transform);
         Gripper little = Instantiate(fingerGrabZonePrefab, wristView.littleTip.transform);
 
-        hand = new (palm, thumb, index, middle, ring, little);
+        hand = new (side, palm, thumb, index, middle, ring, little);
+        hand.OnSwitchGrabState += (b) => OnSwitchGrabState?.Invoke(b);
     }
 
     private void Update()
@@ -36,11 +40,9 @@ public class RealisticGrabHand : MonoBehaviour
 
         if (handView.enabled)
         {
-            wristView.wrist.localPosition = wristOriginal.wrist.localPosition;
-            wristView.wrist.localRotation = wristOriginal.wrist.localRotation;
-            wristView.palm.localPosition = wristOriginal.palm.localPosition;
-            wristView.palm.localRotation = wristOriginal.palm.localRotation;
-
+            wristView.wrist.SetLocalPositionAndRotation(wristOriginal.wrist.localPosition, wristOriginal.wrist.localRotation);
+            wristView.palm.SetLocalPositionAndRotation(wristOriginal.palm.localPosition, wristOriginal.palm.localRotation);
+            
             UpdateBonePosition(HandPart.Thumb, wristView, wristOriginal);
             UpdateBonePosition(HandPart.Index, wristView, wristOriginal);
             UpdateBonePosition(HandPart.Middle, wristView, wristOriginal);

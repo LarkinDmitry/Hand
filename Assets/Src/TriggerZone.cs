@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
 [RequireComponent(typeof(Collider))]
 public class TriggerZone : MonoBehaviour
 {
-    public event Action OnChangeStatus;
-    public GrableObj CollisionObjt { get; private set; }
+    public event Action<GrableObj> OnAddObj;
+    public event Action<GrableObj> OnDelObj;
 
     private void Awake()
     {
@@ -16,9 +17,8 @@ public class TriggerZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if(other.TryGetComponent(out GrableObj obj))
-        {            
-            CollisionObjt = obj;
-            OnChangeStatus?.Invoke();
+        {
+            OnAddObj?.Invoke(obj);
         }
     }
 
@@ -26,8 +26,7 @@ public class TriggerZone : MonoBehaviour
     {
         if (other.TryGetComponent(out GrableObj obj))
         {
-            CollisionObjt = null;
-            OnChangeStatus?.Invoke();
+            OnDelObj?.Invoke(obj);
         }
     }
 }
