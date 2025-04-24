@@ -1368,7 +1368,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4d0eaf5bb7d9a489a84fbe5e167cc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toGrabHandParts: 0000000001000000020000000300000004000000
+  requiredGrabHandParts: 01000000000000000200000003000000
+  optionalGrabHandParts: 0400000005000000
+  maxSkipParts: 1
 --- !u!54 &285124255
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2375,7 +2377,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4d0eaf5bb7d9a489a84fbe5e167cc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toGrabHandParts: 0100000002000000
+  requiredGrabHandParts: 01000000
+  optionalGrabHandParts: 02000000030000000400000005000000
+  maxSkipParts: 3
 --- !u!54 &411746197
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5972,6 +5976,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 832000406}
     - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: maxSkipParts
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
       propertyPath: toGrabHandParts.Array.size
       value: 5
       objectReference: {fileID: 0}
@@ -5994,6 +6002,34 @@ PrefabInstance:
     - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
       propertyPath: 'toGrabHandParts.Array.data[4]'
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: optionalGrabHandParts.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: requiredGrabHandParts.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'optionalGrabHandParts.Array.data[0]'
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'optionalGrabHandParts.Array.data[1]'
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'requiredGrabHandParts.Array.data[0]'
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'requiredGrabHandParts.Array.data[2]'
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'requiredGrabHandParts.Array.data[3]'
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2775058630937164336, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
       propertyPath: m_LocalScale.x
@@ -6370,6 +6406,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 832000406}
     - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: maxSkipParts
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
       propertyPath: toGrabHandParts.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -6380,6 +6420,34 @@ PrefabInstance:
     - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
       propertyPath: 'toGrabHandParts.Array.data[1]'
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: optionalGrabHandParts.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: requiredGrabHandParts.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'optionalGrabHandParts.Array.data[0]'
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'optionalGrabHandParts.Array.data[1]'
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'optionalGrabHandParts.Array.data[2]'
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'optionalGrabHandParts.Array.data[3]'
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196668276398145090, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
+      propertyPath: 'requiredGrabHandParts.Array.data[0]'
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2775058630937164336, guid: d03894161b702c24c97b74a1c3a4a5b9, type: 3}
       propertyPath: m_LocalScale.x
@@ -7912,8 +7980,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   impactForce: 100
-  impactDuration: 0.02
-  holdingForce: 5
+  impactDuration: 0.025
+  holdingForce: 0
   impactTrashhold: 0.25
 --- !u!4 &1922770752
 Transform:
@@ -8407,7 +8475,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4d0eaf5bb7d9a489a84fbe5e167cc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toGrabHandParts: 0000000001000000020000000300000004000000
+  requiredGrabHandParts: 010000000000000002000000
+  optionalGrabHandParts: 030000000400000005000000
+  maxSkipParts: 2
 --- !u!54 &2102513970
 Rigidbody:
   m_ObjectHideFlags: 0

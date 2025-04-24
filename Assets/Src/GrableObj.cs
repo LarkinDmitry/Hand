@@ -6,7 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class GrableObj : MonoBehaviour
 {
-    [SerializeField] private HandPart[] toGrabHandParts;
+    [SerializeField, Header("Обязательные части руки (без контакта с этими частями захвата не будет)")]
+    private HandPart[] requiredGrabHandParts;
+    [SerializeField, Header("Вспомогательные части руки (допускается контакт не со всеми частями)")]
+    private HandPart[] optionalGrabHandParts;
+    [SerializeField, Header("Сколько второстепенных частей допутимо пропустить")]
+    private int maxSkipParts;
 
     private Transform defaultParent;
     private List<Gripper> grippers = new();
@@ -54,22 +59,49 @@ public class GrableObj : MonoBehaviour
 
     private void CheckStatus()
     {
-        bool[] result = new bool[toGrabHandParts.Length];
-
-        for (int i = 0; i < toGrabHandParts.Length; i++)
+        int requiredSkips = 0;
+        for (int i = 0; i < requiredGrabHandParts.Length; i++)
         {
-            result[i] = false;
+            bool requiredResult = false;
             foreach(Gripper gripper in grippers)
             {
-                if(toGrabHandParts[i] == gripper.HandPart)
+                if(requiredGrabHandParts[i] == gripper.HandPart)
                 {
-                    result[i] = true;
+                    requiredResult = true;
                     break;
+                }
+            }
+
+            if (!requiredResult)
+            {
+                requiredSkips++;
+            }
+        }
+
+
+        int optionalSkips = 0;
+        if (requiredSkips == 0)
+        {
+            for (int i = 0; i < optionalGrabHandParts.Length; i++)
+            {
+                bool optionalResult = false;
+                foreach (Gripper gripper in grippers)
+                {
+                    if (optionalGrabHandParts[i] == gripper.HandPart)
+                    {
+                        optionalResult = true;
+                        break;
+                    }
+                }
+
+                if (!optionalResult)
+                {
+                    optionalSkips++;
                 }
             }
         }
 
-        if (result.Contains(false))
+        if (requiredSkips > 0 || optionalSkips > maxSkipParts)
         {
             Release();
         }
@@ -87,7 +119,12 @@ public class GrableObj : MonoBehaviour
 
         GripHand = hand;
         GripHand.AddGrableObj(this);
-        GripHand.GripParts = toGrabHandParts;
+
+        HandPart[] parts = new HandPart[requiredGrabHandParts.Length + optionalGrabHandParts.Length];
+        requiredGrabHandParts.CopyTo(parts, 0);
+        optionalGrabHandParts.CopyTo(parts, requiredGrabHandParts.Length);
+
+        GripHand.GripParts = parts;
         transform.parent = hand.Root;
     }
 
