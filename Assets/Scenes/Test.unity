@@ -3074,7 +3074,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &682824219
 GameObject:
   m_ObjectHideFlags: 0
@@ -7893,7 +7893,7 @@ GameObject:
   - component: {fileID: 1922770752}
   - component: {fileID: 1922770751}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: VibrationController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7911,6 +7911,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eebb532ed4a996468ed3acf8fc3609c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  impactForce: 100
+  impactDuration: 0.02
+  holdingForce: 5
+  impactTrashhold: 0.25
 --- !u!4 &1922770752
 Transform:
   m_ObjectHideFlags: 0
@@ -8548,8 +8552,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1517268253}
+  - {fileID: 1013284613}
   - {fileID: 1085439597}
   - {fileID: 155456670}
   - {fileID: 889278467}
-  - {fileID: 1013284613}
   - {fileID: 1922770752}

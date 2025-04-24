@@ -7,7 +7,12 @@ public class VibrationFeedbackController : MonoBehaviour
 {
     public static VibrationFeedbackController Instance;
 
-    private SerialPort arduinoPort;
+    [Range(0, 100)] public int impactForce;
+    [Range(0, 0.1f)] public float impactDuration;
+    [Range(0, 100)] public int holdingForce;
+    [Range(0, 0.5f)] public float impactTrashhold;
+
+    private SerialPort btPort = new ("COM22", 115200);
     private bool ledState = false;
     private string detectedPort;
     private bool portFound = false;
@@ -15,7 +20,6 @@ public class VibrationFeedbackController : MonoBehaviour
     private char[] command = {'D', 'V', '!', '!', '!', '!', '!', '!' }; // '!' = 0 .... '`' = 100 смещение значений char на "charOffset" (нужно для сокращения команды)
     private const int charOffset = 33;
     private const int commandPrefixLength = 2;
-    private bool needSend = true;
 
     private void Awake()
     {
@@ -30,16 +34,18 @@ public class VibrationFeedbackController : MonoBehaviour
     }
     void Start()
     {
-        bool b = PlayerPrefs.HasKey("port");
-        string s = PlayerPrefs.GetString("port");
-        if (b && !string.IsNullOrEmpty(s))
+        btPort.Open();
+
+        InvokeRepeating(nameof(UpdVibroState), 0, 0.01f);
+    }
+
+    private void UpdVibroState()
+    {
+
+        if (btPort != null && btPort.IsOpen)
         {
-            detectedPort = PlayerPrefs.GetString("port");
-            InitializeArduinoConnection();
-        }
-        else
-        {
-            StartCoroutine(DetectArduinoCoroutine());
+            string s = new string(command);
+            btPort.WriteLine(s);
         }
     }
 
@@ -134,13 +140,13 @@ public class VibrationFeedbackController : MonoBehaviour
 
     void InitializeArduinoConnection()
     {
-        arduinoPort = new(detectedPort, 9600);
-        arduinoPort.ReadTimeout = 500;
-        arduinoPort.WriteTimeout = 500;
+        btPort = new(detectedPort, 9600);
+        btPort.ReadTimeout = 500;
+        btPort.WriteTimeout = 500;
 
         try
         {
-            arduinoPort.Open();
+            btPort.Open();
             Debug.Log("Successfully connected to Arduino");
         }
         catch (System.Exception e)
@@ -154,36 +160,29 @@ public class VibrationFeedbackController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            if (arduinoPort != null && arduinoPort.IsOpen)
+            if (btPort != null && btPort.IsOpen)
             {
                 ledState = !ledState;
                 string command = ledState ? "ON" : "OFF";
-                arduinoPort.WriteLine(command);
+                btPort.WriteLine(command);
             }
             else
             {
                 Debug.LogWarning("Arduino not connected!");
             }
         }
-
-        if (arduinoPort != null && arduinoPort.IsOpen && needSend)
-        {
-            string s = new string(command);
-            arduinoPort.WriteLine(s);
-            needSend = false;
-        }
     }
 
     public void SetVibrationPercent(BodySide side, HandPart part, int value)
     {
-        if (!arduinoPort.IsOpen)
+        if (!btPort.IsOpen)
         {
             return;
         }
 
         value = Mathf.Clamp(value, 0, 100);
 
-        if (side == BodySide.Left)
+        if (side == BodySide.Right)
         {
             int handPart = part switch
             {
@@ -198,16 +197,14 @@ public class VibrationFeedbackController : MonoBehaviour
 
             command[commandPrefixLength + handPart] = (char)(value + charOffset);
         }
-
-        needSend = true;
     }
 
     void OnApplicationQuit()
     {
-        if (arduinoPort != null && arduinoPort.IsOpen)
+        if (btPort != null && btPort.IsOpen)
         {
-            arduinoPort.WriteLine("OFF");
-            arduinoPort.Close();
+            btPort.WriteLine("OFF");
+            btPort.Close();
         }
     }
 }

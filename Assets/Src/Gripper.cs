@@ -12,11 +12,15 @@ public class Gripper : MonoBehaviour
     private Color green = new(0, 1, 0, 0.2f);
     private Color white = new(1, 1, 1, 0.2f);
 
+    private float vibrationTrashHold;
+
     private MeshRenderer meshRenderer;
-    private bool vibration = false;
+    private VibrationFeedbackController vibration;
 
     private void Start()
     {
+        vibration = VibrationFeedbackController.Instance;
+
         grabZone.OnAddObj += (obj) =>
         {
             //Hand.AddCollisionObj(obj);
@@ -40,6 +44,14 @@ public class Gripper : MonoBehaviour
         SetVisibleState(UIEvents.ShowGrabZoneState);
     }
 
+    private void Update()
+    {
+        if (vibrationTrashHold > 0)
+        {
+            vibrationTrashHold = Mathf.Clamp(vibrationTrashHold -= Time.deltaTime, 0, float.MaxValue);
+        }
+    }
+
     public void Iinitialization(HandPart handPart, Hand hand)
     {
         HandPart = handPart;
@@ -60,19 +72,19 @@ public class Gripper : MonoBehaviour
         else
         {
             StopAllCoroutines();
-            VibrationFeedbackController.Instance.SetVibrationPercent(Hand.Side, HandPart, 0);
-            vibration = false;
+            vibrationTrashHold = vibration.impactTrashhold;
+            vibration.SetVibrationPercent(Hand.Side, HandPart, 0);
         }
     }
 
     private IEnumerator MakeVibro()
     {
-        if (!vibration)
+        if(vibrationTrashHold <= 0)
         {
-            vibration = true;
-            VibrationFeedbackController.Instance.SetVibrationPercent(Hand.Side, HandPart, 50);
-            yield return new WaitForSeconds(0.025f);
-            VibrationFeedbackController.Instance.SetVibrationPercent(Hand.Side, HandPart, 5);
+            vibration.SetVibrationPercent(Hand.Side, HandPart, vibration.impactForce);
+            yield return new WaitForSeconds(vibration.impactDuration);
         }
+
+        VibrationFeedbackController.Instance.SetVibrationPercent(Hand.Side, HandPart, vibration.holdingForce);
     }
 }
